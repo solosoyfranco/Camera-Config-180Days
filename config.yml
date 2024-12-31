@@ -1,0 +1,494 @@
+mqtt:
+  host: mqtt
+  topic_prefix: frigate
+
+objects:
+  track:
+    - person
+    - dog
+
+record:
+  enabled: true
+  retain:
+    days: 180
+    mode: motion
+  events:
+    retain:
+      default: 180
+      mode: motion
+
+##### Cameras stream #####
+go2rtc:
+  streams:
+    OP1-Front:
+      - rtsp://USERNAME:PASSWORD@192.168.54.3:554/Preview_01_sub
+    OP1-Right:
+      - rtsp://USERNAME:PASSWORD@192.168.54.3:554/Preview_02_sub
+    OP1-Left-Gate:
+      - rtsp://USERNAME:PASSWORD@192.168.54.3:554/Preview_04_main
+    OP1-Left-Shipping:
+      - rtsp://USERNAME:PASSWORD@192.168.54.3:554/Preview_05_sub
+    OP1-Back:
+      - rtsp://USERNAME:PASSWORD@192.168.54.3:554/Preview_07_sub
+    OP1-Gate:
+      - rtsp://USERNAME:PASSWORD@192.168.54.3:554/Preview_09_sub
+    OP2-Front:
+      - rtsp://USERNAME:PASSWORD@192.168.124.3:554/Preview_01_sub
+    OP2-Left-Gate:
+      - rtsp://USERNAME:PASSWORD@192.168.124.3:554/Preview_02_sub
+    OP2-Right:
+      - rtsp://USERNAME:PASSWORD@192.168.124.3:554/Preview_03_sub
+    OP2-Back:
+      - rtsp://USERNAME:PASSWORD@192.168.124.3:554/Preview_04_sub
+    OP2-Gate:
+      - rtsp://USERNAME:PASSWORD@192.168.124.3:554/Preview_07_sub
+    TX-Front:
+      - rtsp://USERNAME:PASSWORD@192.168.74.11:554/Preview_14_sub
+    TX-Left-Gate:
+      - rtsp://USERNAME:PASSWORD@192.168.74.12:554/Preview_06_sub
+    TX-Left-Guardhouse:
+      - rtsp://USERNAME:PASSWORD@192.168.74.12:554/Preview_07_sub
+    TX-Back:
+      - rtsp://USERNAME:PASSWORD@192.168.74.12:554/Preview_09_sub
+    TX-Gate:
+      - rtsp://USERNAME:PASSWORD@192.168.74.12:554/Preview_11_sub
+    TX-Right-Gate:
+      - rtsp://USERNAME:PASSWORD@192.168.74.12:554/Preview_12_sub
+    TX-Right:
+      - rtsp://USERNAME:PASSWORD@192.168.74.12:554/Preview_13_sub
+    TX-Back-Extension:
+      - rtsp://USERNAME:PASSWORD@192.168.74.12:554/Preview_14_sub
+
+##### Cameras #####
+cameras:
+##OP1-Front##
+  OP1-Front:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP1-Front
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 576
+      fps: 5
+    zones:
+      op1_front_zone:
+        coordinates: 
+          0,1,0.133,0.609,0.295,0.439,0.331,0.499,0.37,0.367,0.672,0.397,0.834,0.463,1,0.635,1,1,0.385,1
+        loitering_time: 0
+        inertia: 3
+    motion:
+      mask: 0,1,0.355,0.388,0.595,0.39,0.827,0.473,1,0.634,1,0,0,0
+##OP1-Right##
+  OP1-Right:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP1-Right
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+##OP1-Left-Gate##
+    zones: {}
+    motion:
+      mask: 
+        0,0,0.187,0.176,0.187,0.222,0.223,0.347,0.277,0.371,0.317,0.328,0.407,0.338,0.498,0.531,0.648,0.461,0.998,0.717,1,0.001
+  OP1-Left-Gate:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP1-Left-Gate
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 2560
+      height: 1440
+      fps: 5
+##OP1-Left-Shipping##
+    zones: {}
+    motion:
+      mask: 0,0,0,0.531,0.202,0.381,0.759,0.188,1,0.164,1,0
+  OP1-Left-Shipping:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP1-Left-Shipping
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+##OP1-Back##
+    motion:
+      mask: 0.308,0.004,0.317,0.088,0.695,0.092,0.684,0.004
+  OP1-Back:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP1-Back
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+##OP1-Gate##
+    zones: {}
+    motion:
+      mask: 0.003,0.003,1,0,1,0.3,0.699,0.096,0.31,0.1,0.359,0.999,0,1
+  OP1-Gate:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP1-Gate
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+##OP2-Front##
+    motion:
+      mask: 0.328,0,0.325,0.085,0.697,0.079,0.697,0
+  OP2-Front:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP2-Front
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 432
+      fps: 5
+##OP2-Left-Gate##
+    zones: {}
+    motion:
+      mask: 0.001,0.519,0.001,0.003,1,0,1,0.698,0.785,0.511,0.178,0.406
+  OP2-Left-Gate:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP2-Left-Gate
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 476
+      fps: 5
+##OP2-Right##
+    zones: {}
+    motion:
+      mask: 0,0.516,0,0,1,0,0.998,0.564,0.887,0.404,0.629,0.232,0.226,0.281
+  OP2-Right:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP2-Right
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 576
+      fps: 5
+##OP2-Back##
+    zones: {}
+    motion:
+      mask: 0.002,0.477,0,0,1,0,0.998,0.611,0.835,0.359,0.766,0.275,0.51,0.166,0.138,0.379
+  OP2-Back:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP2-Back
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 576
+      fps: 5
+##OP2-Gate##
+    zones: {}
+    motion:
+      mask: 0.002,0.481,0,0,1,0,0.999,0.623,0.694,0.305,0.459,0.226,0.094,0.391
+  OP2-Gate:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/OP2-Gate
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+##TX-Front##
+    motion:
+      mask: 0.311,0,0.307,0.088,0.673,0.084,0.681,0.008
+  TX-Front:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Front
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 576
+      fps: 5
+ ## TX-Left-Gate##
+    zones: {}
+    motion:
+      mask: 0,0,0,0.537,0.151,0.453,0.932,0.499,0.998,0.531,1,0
+  TX-Left-Gate:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Left-Gate
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 576
+      fps: 5
+## TX-Left-Guardhouse##
+    zones: {}
+    motion:
+      mask: 0,0,0,0.559,0.295,0.224,0.455,0.172,0.63,0.21,0.908,0.459,1,0.581,1,0
+  TX-Left-Guardhouse:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Left-Guardhouse
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+ ## TX-Back##
+    motion:
+      mask: 0.314,0,0.292,0.087,0.742,0.093,0.681,0
+  TX-Back:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Back
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 576
+      fps: 5
+ ## TX-Gate##
+    zones: {}
+    motion:
+      mask: 0,0,0,0.569,0.509,0.323,0.999,0.521,1,0
+  TX-Gate:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Gate
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+ ## TX-Right-Gate##
+    motion:
+      mask:
+        - 0.362,0.916,0.001,0.915,0,1,0.37,0.999
+        - 0,0.371,0,0,1,0,1,0.017,0.69,0.053,0.535,0.083
+    zones: {}
+  TX-Right-Gate:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Right-Gate
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 480
+      fps: 5
+ ## TX-Right##
+    zones: {}
+    motion:
+      mask: 0,0,0,0.301,0.473,0.205,0.673,0.225,1,0.331,1,0
+  TX-Right:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Right
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 1536
+      height: 576
+      fps: 5
+ ## TX-Back-Extension##
+    zones: {}
+    motion:
+      mask:
+        - 0.729,0.9,1,0.918,0.998,0.996,0.66,1
+        - 0,0.649,0,0,0.999,0,1,0.405,0.629,0.222,0.431,0.232,0.128,0.475
+  TX-Back-Extension:
+    enabled: true
+    ffmpeg:
+      hwaccel_args: preset-nvidia-h264
+      output_args:
+        record: preset-record-generic
+      inputs:
+        - path: rtsp://127.0.0.1:8554/TX-Back-Extension
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - record
+    detect:
+      width: 640
+      height: 480
+      fps: 5
+####### end of Cameras ######
+    zones: {}
+    motion:
+      mask: 0,0,0.002,0.615,0.47,0.505,0.998,0.401,1,0
+detectors:
+  tensorrt:
+    type: tensorrt
+    device: 0
+
+model:
+  path: /config/model_cache/tensorrt/yolov7-320.trt
+  input_tensor: nchw
+  input_pixel_format: rgb
+  width: 320
+  height: 320
+version: 0.14
+camera_groups:
+  op1:
+    cameras:
+      - OP1-Front
+      - OP1-Right
+      - OP1-Left-Gate
+      - OP1-Left-Shipping
+      - OP1-Back
+      - OP1-Gate
+    icon: LuFactory
+    order: 0
+  op2:
+    cameras:
+      - OP2-Front
+      - OP2-Left-Gate
+      - OP2-Right
+      - OP2-Back
+      - OP2-Gate
+    icon: LuFactory
+    order: 1
+  tx:
+    cameras:
+      - TX-Front
+      - TX-Left-Gate
+      - TX-Back
+      - TX-Gate
+      - TX-Left-Guardhouse
+      - TX-Right-Gate
+      - TX-Right
+      - TX-Back-Extension
+    icon: LuFactory
+    order: 2
